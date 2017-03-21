@@ -6,7 +6,7 @@ namespace TicTacToe.Core
 
     public class Game
     {
-        public const int PLAYER1 = 0, PLAYER2 = 1, NONE = -1;
+        public const int PLAYER1 = 1, PLAYER2 = -1, NONE = 0;
         public const string COMPLETE = "COMPLETE", INPROGRESS = "IN PROGRESS";
 
         private int _nextPlayer = PLAYER1;

@@ -5,7 +5,7 @@
     public class Board
     {
         public const int SIZE = 9, SIDE = 3;
-        private const int EMPTYCELLINDICATOR = -1;
+        private const int EMPTYCELLINDICATOR = 0;
         private int[][] _cells;
         private int _filledCells;
 
