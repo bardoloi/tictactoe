@@ -29,7 +29,7 @@ namespace TicTacToe.Core
         {
             Board.AddMoveToCell(x, y, _nextPlayer);
 
-            Moves[_nextMoveNumber++] = new Move { X = x, Y = y, PlayerNumber = _nextPlayer };
+            Moves[_nextMoveNumber++] = new Move(_nextPlayer, x, y);
 
             UpdateStatus(_nextPlayer);
 
