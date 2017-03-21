@@ -26,8 +26,13 @@
                 DisplayBoard(game.Board);
             }
 
-            var winner = game.Winner == Game.PLAYER1 ? "Player 1" : "Player 2";
-            Console.WriteLine($"{winner} wins!");
+            var winner = Player.None;
+            if (game.Winner == Player.Player1)
+                winner = Player.Player1;
+            else if (game.Winner == Player.Player2)
+                winner = Player.Player2;
+
+            Console.WriteLine($"{winner.DisplayName} wins!");
 
             Console.ReadLine();
         }
@@ -42,14 +47,13 @@
                     var index = 3*i + j;
 
                     var mark = " ";
-                    switch (board.Cell(i, j))
+                    if (board.PlayerInCell(i, j) == Player.Player1)
                     {
-                        case Game.PLAYER1:
-                            mark = "X";
-                            break;
-                        case Game.PLAYER2:
-                            mark = "O";
-                            break;
+                        mark = "X";
+                    }
+                    else if (board.PlayerInCell(i, j) == Player.Player2)
+                    {
+                        mark = "O";
                     }
 
                     output = output.Replace($"p{index}", mark);
