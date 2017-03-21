@@ -5,6 +5,7 @@
     public class Board
     {
         public const int SIZE = 9, SIDE = 3;
+
         private const int EMPTYCELLINDICATOR = 0;
         private int[][] _cells;
         private int _filledCells;
@@ -12,14 +13,14 @@
         public Board()
         {
             // initialize a 3x3 board
-            _cells = new int[3][];
-            for (var i = 0; i < 3; i++)
+            _cells = new int[SIDE][];
+            for (var i = 0; i < SIDE; i++)
             {
                 _cells[i] = new [] { EMPTYCELLINDICATOR, EMPTYCELLINDICATOR, EMPTYCELLINDICATOR };
             }
         }
 
-        public void AddMoveToCell(int x, int y, int playerNumber)
+        internal void AddMoveToCell(int x, int y, int playerNumber)
         {
             if (x < 0 || x >= SIDE || y < 0 || y >= SIDE)
                 throw new ArgumentException("Move falls outside board");

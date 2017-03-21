@@ -8,9 +8,7 @@ namespace TicTacToe.Core
         public const string COMPLETE = "COMPLETE", INPROGRESS = "IN PROGRESS";
 
         private int _nextPlayer = PLAYER1;
-        private int _nextMoveNumber;
 
-        public Move[] Moves { get; }
         public Board Board { get; }
         public string Status { get; private set; }
         public int Winner { get; private set; }
@@ -18,7 +16,6 @@ namespace TicTacToe.Core
         public Game()
         {
             Board = new Board();
-            Moves = new Move[Board.SIZE];
             Status = INPROGRESS;
             Winner = NONE;
         }
@@ -29,8 +26,6 @@ namespace TicTacToe.Core
                 throw new ApplicationException("Game is already over!");
 
             Board.AddMoveToCell(x, y, _nextPlayer);
-
-            Moves[_nextMoveNumber++] = new Move(_nextPlayer, x, y);
 
             UpdateGameStatus(_nextPlayer);
 
