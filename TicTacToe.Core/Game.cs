@@ -2,8 +2,6 @@
 
 namespace TicTacToe.Core
 {
-    using System.Linq;
-
     public class Game
     {
         public const int PLAYER1 = 1, PLAYER2 = -1, NONE = 0;
@@ -12,10 +10,10 @@ namespace TicTacToe.Core
         private int _nextPlayer = PLAYER1;
         private int _nextMoveNumber;
 
-        public Move[] Moves { get; set; }
-        public Board Board { get; set; }
-        public string Status { get; set; }
-        public int Winner { get; set; }
+        public Move[] Moves { get; }
+        public Board Board { get; }
+        public string Status { get; private set; }
+        public int Winner { get; private set; }
 
         public Game()
         {
@@ -27,16 +25,19 @@ namespace TicTacToe.Core
 
         public void AddMove(int x, int y)
         {
+            if(Status == COMPLETE)
+                throw new ApplicationException("Game is already over!");
+
             Board.AddMoveToCell(x, y, _nextPlayer);
 
             Moves[_nextMoveNumber++] = new Move(_nextPlayer, x, y);
 
-            UpdateStatus(_nextPlayer);
+            UpdateGameStatus(_nextPlayer);
 
             _nextPlayer = (_nextPlayer == PLAYER1) ? PLAYER2 : PLAYER1;
         }
 
-        private void UpdateStatus(int player)
+        private void UpdateGameStatus(int player)
         {
             if (Board.IsWon())
             {
