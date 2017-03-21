@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace TicTacToe.Core
+﻿namespace TicTacToe.Core
 {
+    using System;
+
     public class Game
     {
         public const int PLAYER1 = 1, PLAYER2 = -1, NONE = 0;
