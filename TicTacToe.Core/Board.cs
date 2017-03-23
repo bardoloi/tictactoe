@@ -5,25 +5,36 @@
 
     public class Board
     {
-        public const int SIZE = 9, SIDE = 3;
+        public const int DEFAULTSIZE = 9, DEFAULTSIDE = 3;
 
-        private Player[][] _cells;
         private int _filledCells;
-        private int[] _rowColDiagScores = new int[(2 * SIDE) + 2];
+        private readonly Player[][] _cells;
+        private readonly int[] _rowColDiagScores, _rowColDiagMoveCounts;
+        public int Side { get; }
 
-        public Board()
+        public Board() : this(DEFAULTSIDE)
+        {            
+        }
+
+        public Board(int side)
         {
-            // initialize a 3x3 board
-            _cells = new Player[SIDE][];
-            for (var i = 0; i < SIDE; i++)
+            Side = side;
+            _rowColDiagScores = new int[(2 * Side) + 2];
+            _rowColDiagMoveCounts = new int[(2 * Side) + 2];
+
+            // initialize board
+            _cells = new Player[Side][];
+            for (var i = 0; i < Side; i++)
             {
-                _cells[i] = new [] { Player.None, Player.None, Player.None };
+                _cells[i] = new Player[Side];
+                for (var j = 0; j < Side; j++)
+                    _cells[i][j] = Player.None;
             }
         }
 
         internal void AddMoveToCell(int x, int y, Player player)
         {
-            if (x < 0 || x >= SIDE || y < 0 || y >= SIDE)
+            if (x < 0 || x >= Side || y < 0 || y >= Side)
                 throw new ArgumentException("Move falls outside board");
             if (!IsCellEmpty(x, y))
                 throw new ArgumentException("Cell is already occupied");
@@ -32,26 +43,40 @@
 
             _filledCells++;
 
-            UpdateInternalScore(x, y, player);
+            UpdateInternalCounts(x, y, player);
         }
 
-        private void UpdateInternalScore(int x, int y, Player player)
+        private void UpdateInternalCounts(int x, int y, Player player)
         {
             var score = (player == Player.Player1) ? 1 : -1;
 
             var rowIndex = x;
-            var colIndex = SIDE + y;
+            var colIndex = Side + y;
 
-            const int diag1Index = 2*SIDE;
-            const int diag2Index = 2 * SIDE + 1;
+            var diag1Index = 2* Side;
+            var diag2Index = 2 * Side + 1;
 
-            _rowColDiagScores[rowIndex] += score; // update row score
-            _rowColDiagScores[colIndex] += score; // update column score
+            // update row scores
+            _rowColDiagScores[rowIndex] += score; 
+            _rowColDiagMoveCounts[rowIndex]++;
 
-            if (x == y) 
-                _rowColDiagScores[diag1Index] += score; // update diagonal score
-            else if (x + y == SIDE) 
-                _rowColDiagScores[diag2Index] += score; // update antidiagonal score
+            // update column score
+            _rowColDiagScores[colIndex] += score; 
+            _rowColDiagMoveCounts[colIndex]++;
+
+            // update diagonal score
+            if (x == y)
+            {
+                _rowColDiagScores[diag1Index] += score; 
+                _rowColDiagMoveCounts[diag1Index]++;
+            }
+            
+            // update antidiagonal score
+            if (x + y == DEFAULTSIDE)
+            { 
+                _rowColDiagScores[diag2Index] += score;
+                _rowColDiagMoveCounts[diag1Index]++;
+            }
         }
 
         public Player PlayerInCell(int x, int y)
@@ -66,12 +91,27 @@
 
         public bool IsWon()
         {
-            return _rowColDiagScores.Any(s => Math.Abs(s).Equals(SIDE));
+            return _rowColDiagScores.Any(s => Math.Abs(s).Equals(Side));
         }
 
-        public bool IsFull()
+        public bool IsComplete()
         {
-            return (_filledCells == 9);
+            return IsFull() || NoResultPossible();
+        }
+
+        private bool NoResultPossible()
+        {
+            for(int i = 0; i < _rowColDiagScores.Length; i++)
+                if (_rowColDiagMoveCounts[i] == Math.Abs(_rowColDiagScores[i]))
+                    return false;
+
+
+            return true;
+        }
+
+        private bool IsFull()
+        {
+            return (_filledCells == Side * Side);
         }
     }
 }

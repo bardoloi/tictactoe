@@ -6,18 +6,22 @@
     {
         public const string COMPLETE = "COMPLETE", INPROGRESS = "IN PROGRESS";
 
-        private Player _nextPlayer;
+        private Player _nextPlayer = Player.Player1;
 
         public Board Board { get; }
-        public string Status { get; private set; }
-        public Player Winner { get; private set; }
+        public string Status { get; private set; } = INPROGRESS;
+        public Player Winner { get; private set; } = Player.None;
 
         public Game()
         {
             Board = new Board();
-            Status = INPROGRESS;
-            Winner = Player.None;
-            _nextPlayer = Player.Player1;
+        }
+
+        public Game(int side)
+        {
+            if (side < Board.DEFAULTSIDE)
+                throw new ArgumentException("Board size must be 3 or higher");
+            Board = new Board(side);
         }
 
         public void AddMove(int x, int y)
@@ -39,7 +43,7 @@
                 Status = COMPLETE;
                 Winner = player;
             }
-            else if (Board.IsFull())
+            else if (Board.IsComplete())
             {
                 Status = COMPLETE;
                 Winner = Player.None;
