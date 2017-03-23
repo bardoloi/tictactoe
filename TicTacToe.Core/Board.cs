@@ -1,6 +1,7 @@
 ﻿namespace TicTacToe.Core
 {
     using System;
+    using System.Linq;
 
     public class Board
     {
@@ -8,6 +9,7 @@
 
         private Player[][] _cells;
         private int _filledCells;
+        private int[] _rowColDiagScores = new int[(2 * SIDE) + 2];
 
         public Board()
         {
@@ -29,6 +31,27 @@
             _cells[x][y] = player;
 
             _filledCells++;
+
+            UpdateInternalScore(x, y, player);
+        }
+
+        private void UpdateInternalScore(int x, int y, Player player)
+        {
+            var score = (player == Player.Player1) ? 1 : -1;
+
+            var rowIndex = x;
+            var colIndex = SIDE + y;
+
+            const int diag1Index = 2*SIDE;
+            const int diag2Index = 2 * SIDE + 1;
+
+            _rowColDiagScores[rowIndex] += score; // update row score
+            _rowColDiagScores[colIndex] += score; // update column score
+
+            if (x == y) 
+                _rowColDiagScores[diag1Index] += score; // update diagonal score
+            else if (x + y == SIDE) 
+                _rowColDiagScores[diag2Index] += score; // update antidiagonal score
         }
 
         public Player PlayerInCell(int x, int y)
@@ -43,19 +66,7 @@
 
         public bool IsWon()
         {
-            return (
-                // row win
-                (_cells[0][0] == _cells[0][1] && _cells[0][0] == _cells[0][2] && _cells[0][0] != Player.None) ||
-                (_cells[1][0] == _cells[1][1] && _cells[1][0] == _cells[1][2] && _cells[1][0] != Player.None) ||
-                (_cells[2][0] == _cells[2][1] && _cells[2][0] == _cells[2][2] && _cells[2][0] != Player.None) ||
-                // column win
-                (_cells[0][0] == _cells[1][0] && _cells[0][0] == _cells[2][0] && _cells[0][0] != Player.None) ||
-                (_cells[1][0] == _cells[1][1] && _cells[1][0] == _cells[1][2] && _cells[1][0] != Player.None) ||
-                (_cells[2][0] == _cells[2][1] && _cells[2][0] == _cells[2][2] && _cells[2][0] != Player.None) ||
-                // diagonal win
-                (_cells[0][0] == _cells[1][1] && _cells[0][0] == _cells[2][2] && _cells[0][0] != Player.None) ||
-                (_cells[2][0] == _cells[1][1] && _cells[2][0] == _cells[0][2] && _cells[2][0] != Player.None)
-            );
+            return _rowColDiagScores.Any(s => Math.Abs(s).Equals(SIDE));
         }
 
         public bool IsFull()
