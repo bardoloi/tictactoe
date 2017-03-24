@@ -8,25 +8,25 @@
     {
         static void Main(string[] args)
         {
-            var game = new Game();
+            var board = new Board();
 
-            while (game.Status != GameStatus.Completed)
+            while (board.Status().Equals(BoardStatus.InProgress))
             {
                 try
                 {
                     Console.Write("Enter next move (x y): ");
                     var xy = Array.ConvertAll(Console.ReadLine().Split(' ').ToArray(), s => int.Parse(s.Trim()));
 
-                    game.AddMove(xy[0], xy[1]);
+                    board.AddMove(xy[0], xy[1]);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
-                DisplayBoard(game.Board);
+                DisplayBoard(board);
             }
 
-            Console.WriteLine($"{game.Board.Winner.DisplayName} wins!");
+            Console.WriteLine($"{board.Winner.DisplayName} wins!");
 
             Console.ReadLine();
         }

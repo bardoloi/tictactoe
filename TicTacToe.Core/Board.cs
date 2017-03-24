@@ -25,6 +25,17 @@
             Side = side;
         }
 
+        public BoardStatus Status()
+        {
+            if (IsWon())
+                return BoardStatus.Won;
+
+            if (IsDrawn())
+                return BoardStatus.Drawn;
+
+            return BoardStatus.InProgress;
+        }
+
         public Player PlayerInCell(int x, int y)
         {
             var move = _moves.FirstOrDefault(m => m.X == x && m.Y == y);
@@ -36,12 +47,14 @@
             return !_moves.Any(m => m.X == x && m.Y == y);
         }
 
-        public void AddMoveToCell(int x, int y)
+        public void AddMove(int x, int y)
         {
             if (x < 0 || x >= Side || y < 0 || y >= Side)
                 throw new ArgumentException("Move falls outside board");
             if (!IsCellEmpty(x, y))
                 throw new ArgumentException("Cell is already occupied");
+            if (!Status().Equals(BoardStatus.InProgress))
+                throw new ApplicationException("Game is already over!");
 
             var player = _nextPlayer;
 
