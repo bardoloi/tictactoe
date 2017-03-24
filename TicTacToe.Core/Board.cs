@@ -5,20 +5,20 @@
 
     public class Board
     {
-        private const int MinimumSide = 3;
+        private const int DefaultSide = 3;
         private readonly Player[][] _cells;
         private readonly int[] _rowColDiagScores, _rowColDiagMoveCounts;
 
         public int Side { get; }
 
-        public Board() : this(MinimumSide)
+        public Board() : this(DefaultSide)
         {            
         }
 
         public Board(int side)
         {
-            if (side < Board.MinimumSide)
-                throw new ArgumentException($"Board size must be {MinimumSide} or higher");
+            if (side < DefaultSide)
+                throw new ArgumentException($"Board size must be {DefaultSide} or higher");
 
             Side = side;
             _rowColDiagScores = new int[(2 * Side) + 2];

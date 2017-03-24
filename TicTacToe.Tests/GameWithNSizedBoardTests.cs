@@ -14,18 +14,6 @@
             });
         }
 
-        public void should_initiate_board_of_side_3_by_default()
-        {
-            var game = new Game();
-            game.Board.Side.ShouldBe(3);
-        }
-
-        public void should_initiate_board_of_correct_size()
-        {
-            var game = new Game(5);
-            game.Board.Side.ShouldBe(5);
-        }
-
         public void should_start_new_game_with_status_in_progress()
         {
             var game = new Game(6);

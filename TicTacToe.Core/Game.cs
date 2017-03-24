@@ -27,23 +27,27 @@
 
             Board.AddMoveToCell(x, y, _nextPlayer);
 
-            UpdateGameStatus(_nextPlayer);
+            UpdateGameStatus();
+            SetWinner();
+            ToggleNextPlayer();
+        }
 
+        private void UpdateGameStatus()
+        {
+            if (Board.IsDrawn()|| Board.IsWon())
+                Status = GameStatus.Completed;
+        }
+
+        private void SetWinner()
+        {
+            if (Board.IsWon())
+                Winner = _nextPlayer;
+        }
+
+        private void ToggleNextPlayer()
+        {
             _nextPlayer = _nextPlayer.Toggle();
         }
 
-        private void UpdateGameStatus(Player player)
-        {
-            if (Board.IsWon())
-            {
-                Status = GameStatus.Completed;
-                Winner = player;
-            }
-            else if (Board.IsDrawn())
-            {
-                Status = GameStatus.Completed;
-                Winner = Player.None;
-            }
-        }
     }
 }

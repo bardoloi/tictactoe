@@ -6,19 +6,25 @@
 
     public class BoardTests
     {
-        public void new_board_should_be_empty()
+        public void should_initiate_board_of_side_3_by_default()
         {
-            var newBoard = new Board();
-
-            for(var x = 0; x < newBoard.Side; x++)
-                for(var y = 0; y < newBoard.Side; y++)
-                    newBoard.IsCellEmpty(x, y).ShouldBe(true);
+            var board = new Board();
+            board.Side.ShouldBe(3);
         }
 
-        public void new_board_should_have_InProgress_status()
+        public void should_initiate_board_of_correct_size()
         {
-            var newBoard = new Game().Board;
-            newBoard.Status.ShouldBe(BoardStatus.InProgress);
+            var board = new Board(5);
+            board.Side.ShouldBe(5);
+        }
+
+        public void new_board_should_be_empty()
+        {
+            var board = new Board();
+
+            for(var x = 0; x < board.Side; x++)
+                for(var y = 0; y < board.Side; y++)
+                    board.IsCellEmpty(x, y).ShouldBe(true);
         }
 
         public void should_reject_move_if_cell_already_occupied()
