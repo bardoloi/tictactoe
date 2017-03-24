@@ -36,17 +36,13 @@
             // add move to unoccupied cell: succeeds
             Should.NotThrow(() =>
             {
-                board.AddMoveToCell(x, y, Player.One);
+                board.AddMoveToCell(x, y);
             });
 
-            // add move to occupied cell: fails regardless of which player tries
+            // add move to occupied cell: fails
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMoveToCell(x, y, Player.Two);
-            });
-            Should.Throw<ArgumentException>(() =>
-            {
-                board.AddMoveToCell(x, y, Player.One);
+                board.AddMoveToCell(x, y);
             });
         }
 
@@ -56,27 +52,27 @@
 
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMoveToCell(-1, -1, Player.One);
+                board.AddMoveToCell(-1, -1);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMoveToCell(-1, 0, Player.One);
+                board.AddMoveToCell(-1, 0);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMoveToCell(0, -2, Player.One);
+                board.AddMoveToCell(0, -2);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMoveToCell(0, 3, Player.One);
+                board.AddMoveToCell(0, 3);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMoveToCell(3, 2, Player.One);
+                board.AddMoveToCell(3, 2);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMoveToCell(3, 5, Player.One);
+                board.AddMoveToCell(3, 5);
             });
         }
     }

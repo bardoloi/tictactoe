@@ -26,13 +26,7 @@
                 DisplayBoard(game.Board);
             }
 
-            var winner = Player.None.DisplayName;
-            if (game.Winner == Player.One)
-                winner = Player.One.DisplayName;
-            else if (game.Winner == Player.Two)
-                winner = Player.Two.DisplayName;
-
-            Console.WriteLine($"{winner} wins!");
+            Console.WriteLine($"{game.Board.Winner.DisplayName} wins!");
 
             Console.ReadLine();
         }
