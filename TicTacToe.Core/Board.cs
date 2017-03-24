@@ -97,24 +97,13 @@
             return _rowColDiagScores.Any(s => Math.Abs(s).Equals(Side));
         }
 
-        public bool IsComplete()
+        public bool IsDrawn()
         {
-            return IsFull() || NoResultPossible();
-        }
-
-        private bool NoResultPossible()
-        {
-            for(int i = 0; i < _rowColDiagScores.Length; i++)
+            for (var i = 0; i < _rowColDiagScores.Length; i++)
                 if (_rowColDiagMoveCounts[i] == Math.Abs(_rowColDiagScores[i]))
                     return false;
 
-
             return true;
-        }
-
-        private bool IsFull()
-        {
-            return (_filledCells == Side * Side);
         }
     }
 }

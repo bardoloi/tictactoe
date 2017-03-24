@@ -41,7 +41,7 @@
                 Status = COMPLETE;
                 Winner = player;
             }
-            else if (Board.IsComplete())
+            else if (Board.IsDrawn())
             {
                 Status = COMPLETE;
                 Winner = Player.None;
