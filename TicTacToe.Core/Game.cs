@@ -4,12 +4,10 @@
 
     public class Game
     {
-        public const string COMPLETE = "COMPLETE", INPROGRESS = "IN PROGRESS";
-
         private Player _nextPlayer = Player.One;
 
         public Board Board { get; }
-        public string Status { get; private set; } = INPROGRESS;
+        public GameStatus Status { get; private set; } = GameStatus.InProgress;
         public Player Winner { get; private set; } = Player.None;
 
         public Game()
@@ -24,7 +22,7 @@
 
         public void AddMove(int x, int y)
         {
-            if(Status == COMPLETE)
+            if(Status == GameStatus.Completed)
                 throw new ApplicationException("Game is already over!");
 
             Board.AddMoveToCell(x, y, _nextPlayer);
@@ -38,12 +36,12 @@
         {
             if (Board.IsWon())
             {
-                Status = COMPLETE;
+                Status = GameStatus.Completed;
                 Winner = player;
             }
             else if (Board.IsDrawn())
             {
-                Status = COMPLETE;
+                Status = GameStatus.Completed;
                 Winner = Player.None;
             }
         }

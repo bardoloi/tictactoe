@@ -10,7 +10,7 @@
         {
             var game = new Game();
 
-            while (game.Status != Game.COMPLETE)
+            while (game.Status != GameStatus.Completed)
             {
                 try
                 {

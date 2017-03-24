@@ -6,10 +6,9 @@
     public class Board
     {
         private const int MinimumSide = 3;
-
-        private int _filledCells;
         private readonly Player[][] _cells;
         private readonly int[] _rowColDiagScores, _rowColDiagMoveCounts;
+
         public int Side { get; }
 
         public Board() : this(MinimumSide)
@@ -35,6 +34,16 @@
             }
         }
 
+        public Player PlayerInCell(int x, int y)
+        {
+            return _cells[x][y];
+        }
+
+        public bool IsCellEmpty(int x, int y)
+        {
+            return _cells[x][y] == Player.None;
+        }
+
         internal void AddMoveToCell(int x, int y, Player player)
         {
             if (x < 0 || x >= Side || y < 0 || y >= Side)
@@ -44,9 +53,21 @@
 
             _cells[x][y] = player;
 
-            _filledCells++;
-
             UpdateInternalCounts(x, y, player);
+        }
+
+        internal bool IsWon()
+        {
+            return _rowColDiagScores.Any(s => Math.Abs(s).Equals(Side));
+        }
+
+        internal bool IsDrawn()
+        {
+            for (var i = 0; i < _rowColDiagScores.Length; i++)
+                if (_rowColDiagMoveCounts[i] == Math.Abs(_rowColDiagScores[i]))
+                    return false;
+
+            return true;
         }
 
         private void UpdateInternalCounts(int x, int y, Player player)
@@ -80,30 +101,6 @@
                 _rowColDiagScores[diag2Index] += score;
                 _rowColDiagMoveCounts[diag2Index]++;
             }
-        }
-
-        public Player PlayerInCell(int x, int y)
-        {
-            return _cells[x][y];
-        }
-
-        public bool IsCellEmpty(int x, int y)
-        {
-            return _cells[x][y] == Player.None;
-        }
-
-        public bool IsWon()
-        {
-            return _rowColDiagScores.Any(s => Math.Abs(s).Equals(Side));
-        }
-
-        public bool IsDrawn()
-        {
-            for (var i = 0; i < _rowColDiagScores.Length; i++)
-                if (_rowColDiagMoveCounts[i] == Math.Abs(_rowColDiagScores[i]))
-                    return false;
-
-            return true;
         }
     }
 }
