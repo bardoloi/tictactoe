@@ -1,12 +1,13 @@
 ﻿namespace TicTacToe.Core
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     public class Board
     {
         private const int DefaultSide = 3;
-        private readonly Player[][] _cells;
+        private readonly List<Move> _moves;
         private readonly int[] _rowColDiagScores, _rowColDiagMoveCounts;
 
         public int Side { get; }
@@ -25,23 +26,18 @@
             _rowColDiagMoveCounts = new int[(2 * Side) + 2];
 
             // initialize board
-            _cells = new Player[Side][];
-            for (var i = 0; i < Side; i++)
-            {
-                _cells[i] = new Player[Side];
-                for (var j = 0; j < Side; j++)
-                    _cells[i][j] = Player.None;
-            }
+            _moves = new List<Move>();
         }
 
         public Player PlayerInCell(int x, int y)
         {
-            return _cells[x][y];
+            var move = _moves.FirstOrDefault(m => m.X == x && m.Y == y);
+            return move == null ? Player.None : move.Player;
         }
 
         public bool IsCellEmpty(int x, int y)
         {
-            return _cells[x][y] == Player.None;
+            return !_moves.Any(m => m.X == x && m.Y == y);
         }
 
         public void AddMoveToCell(int x, int y, Player player)
@@ -51,7 +47,7 @@
             if (!IsCellEmpty(x, y))
                 throw new ArgumentException("Cell is already occupied");
 
-            _cells[x][y] = player;
+            _moves.Add(new Move {Player = player, X = x, Y = y});
 
             UpdateInternalCounts(x, y, player);
         }
