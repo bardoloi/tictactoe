@@ -1,8 +1,9 @@
 ﻿namespace TicTacToe.Core
 {
-    public enum GameStatus
+    public enum BoardStatus
     {
         InProgress,
-        Completed
+        Won,
+        Drawn
     }
 }

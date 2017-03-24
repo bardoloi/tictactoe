@@ -8,7 +8,9 @@
     {
         private const int DefaultSide = 3;
         private readonly List<Move> _moves = new List<Move>();
+        private Player _nextPlayer = Player.One;
 
+        public Player Winner { get; private set; } = Player.None;
         public int Side { get; }
 
         public Board() : this(DefaultSide)
@@ -23,6 +25,17 @@
             Side = side;
         }
 
+        public BoardStatus Status()
+        {
+            if (IsWon())
+                return BoardStatus.Won;
+
+            if (IsDrawn())
+                return BoardStatus.Drawn;
+
+            return BoardStatus.InProgress;
+        }
+
         public Player PlayerInCell(int x, int y)
         {
             var move = _moves.FirstOrDefault(m => m.X == x && m.Y == y);
@@ -34,14 +47,24 @@
             return !_moves.Any(m => m.X == x && m.Y == y);
         }
 
-        public void AddMoveToCell(int x, int y, Player player)
+        public void AddMove(int x, int y)
         {
             if (x < 0 || x >= Side || y < 0 || y >= Side)
                 throw new ArgumentException("Move falls outside board");
             if (!IsCellEmpty(x, y))
                 throw new ArgumentException("Cell is already occupied");
+            if (!Status().Equals(BoardStatus.InProgress))
+                throw new ApplicationException("Game is already over!");
+
+            var player = _nextPlayer;
 
             _moves.Add(new Move {Player = player, X = x, Y = y});
+
+            if (IsWon())
+                Winner = player;
+
+            // toggle next player; move is marked
+            _nextPlayer = player.Toggle(); 
         }
 
         internal bool IsWon()
