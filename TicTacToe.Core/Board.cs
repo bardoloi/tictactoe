@@ -7,8 +7,7 @@
     public class Board
     {
         private const int DefaultSide = 3;
-        private readonly List<Move> _moves;
-        private readonly int[] _rowColDiagScores, _rowColDiagMoveCounts;
+        private readonly List<Move> _moves = new List<Move>();
 
         public int Side { get; }
 
@@ -22,11 +21,6 @@
                 throw new ArgumentException($"Board size must be {DefaultSide} or higher");
 
             Side = side;
-            _rowColDiagScores = new int[(2 * Side) + 2];
-            _rowColDiagMoveCounts = new int[(2 * Side) + 2];
-
-            // initialize board
-            _moves = new List<Move>();
         }
 
         public Player PlayerInCell(int x, int y)
@@ -48,55 +42,87 @@
                 throw new ArgumentException("Cell is already occupied");
 
             _moves.Add(new Move {Player = player, X = x, Y = y});
-
-            UpdateInternalCounts(x, y, player);
         }
 
         internal bool IsWon()
         {
-            return _rowColDiagScores.Any(s => Math.Abs(s).Equals(Side));
+            return
+                GetAllRows().Any(IsFilledBySinglePlayer)
+                ||
+                GetAllColumns().Any(IsFilledBySinglePlayer)
+                ||
+                GetAllDiagonals().Any(IsFilledBySinglePlayer);
         }
 
         internal bool IsDrawn()
         {
-            for (var i = 0; i < _rowColDiagScores.Length; i++)
-                if (_rowColDiagMoveCounts[i] == Math.Abs(_rowColDiagScores[i]))
-                    return false;
-
-            return true;
+            // Drawn if each row, col and diag has at least 1 move by each players - so nobody can win
+            return
+                GetAllRows().All(ContainsMarksFromEachPlayer)
+                &&
+                GetAllColumns().All(ContainsMarksFromEachPlayer)
+                &&
+                GetAllDiagonals().All(ContainsMarksFromEachPlayer);
         }
 
-        private void UpdateInternalCounts(int x, int y, Player player)
+        private static bool ContainsMarksFromEachPlayer(IEnumerable<Move> input)
         {
-            var score = (player == Player.One) ? 1 : -1;
+            IEnumerable<Move> x = input.ToList();
+            return x.Any(m => m.Player == Player.One) && x.Any(m => m.Player == Player.Two);
+        }
 
-            var rowIndex = x;
-            var colIndex = Side + y;
+        private bool IsFilledBySinglePlayer(IEnumerable<Move> input)
+        {
+            IEnumerable<Move> x = input.ToList();
+            return
+                // row/col/diag is full
+                x.Count() == Side &&
+                // all cells are marked by the same player
+                (x.All(cell => cell.Player == Player.One) || x.All(cell => cell.Player == Player.Two)); 
+        }
 
-            var diag1Index = 2* Side;
-            var diag2Index = 2 * Side + 1;
+        private IEnumerable<IEnumerable<Move>> GetAllRows()
+        {
+            var rows = new List<IEnumerable<Move>>();
+            for(var i = 0; i < Side; i++)
+                rows.Add(GetRow(i));
 
-            // update row scores
-            _rowColDiagScores[rowIndex] += score; 
-            _rowColDiagMoveCounts[rowIndex]++;
+            return rows.AsEnumerable();
+        }
 
-            // update column score
-            _rowColDiagScores[colIndex] += score; 
-            _rowColDiagMoveCounts[colIndex]++;
+        private IEnumerable<IEnumerable<Move>> GetAllColumns()
+        {
+            var cols = new List<IEnumerable<Move>>();
+            for (var i = 0; i < Side; i++)
+                cols.Add(GetColumn(i));
 
-            // update diagonal score
-            if (x == y)
-            {
-                _rowColDiagScores[diag1Index] += score; 
-                _rowColDiagMoveCounts[diag1Index]++;
-            }
-            
-            // update antidiagonal score
-            if (x + y + 1 == Side)
-            { 
-                _rowColDiagScores[diag2Index] += score;
-                _rowColDiagMoveCounts[diag2Index]++;
-            }
+            return cols.AsEnumerable();
+        }
+
+        private IEnumerable<IEnumerable<Move>> GetAllDiagonals()
+        {
+            var diags = new List<IEnumerable<Move>> {GetDiagonal(), GetAntiDiagonal()};
+            return diags.AsEnumerable();
+        }
+
+        private IEnumerable<Move> GetRow(int rowIndex)
+        {
+            return _moves.Where(m => m.X == rowIndex);
+        }
+
+        private IEnumerable<Move> GetColumn(int colIndex)
+        {
+            return _moves.Where(m => m.Y == colIndex);
+        }
+
+        private IEnumerable<Move> GetDiagonal()
+        {
+            return _moves.Where(m => m.Y == m.X);
+        }
+
+        private IEnumerable<Move> GetAntiDiagonal()
+        {
+            return _moves.Where(m => m.Y + m.X + 1 == Side);
         }
     }
 }
