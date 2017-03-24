@@ -10,8 +10,8 @@
         {
             var game = new Game();
 
-            for(var x = 0; x < Board.DEFAULTSIDE; x++)
-                for(var y = 0; y < Board.DEFAULTSIDE; y++)
+            for(var x = 0; x < game.Board.Side; x++)
+                for(var y = 0; y < game.Board.Side; y++)
                     game.Board.IsCellEmpty(x, y).ShouldBe(true);
         }
 

@@ -19,8 +19,6 @@
 
         public Game(int side)
         {
-            if (side < Board.DEFAULTSIDE)
-                throw new ArgumentException("Board size must be 3 or higher");
             Board = new Board(side);
         }
 

@@ -5,7 +5,11 @@
 
     public abstract class Player : Enumeration<Player>
     {
-        private Player(int value, string displayName) : base(value, displayName)
+        public static Player One = new Player1();
+        public static Player Two = new Player2();
+        public static Player None = new NoPlayer();
+
+        protected Player(int value, string displayName) : base(value, displayName)
         {
         }
 
@@ -46,9 +50,5 @@
                 throw new ApplicationException("Something has gone wrong with your game");
             }
         }
-
-        public static Player One = new Player1();
-        public static Player Two = new Player2();
-        public static Player None = new NoPlayer();
     }
 }
