@@ -44,7 +44,7 @@
             return _cells[x][y] == Player.None;
         }
 
-        internal void AddMoveToCell(int x, int y, Player player)
+        public void AddMoveToCell(int x, int y, Player player)
         {
             if (x < 0 || x >= Side || y < 0 || y >= Side)
                 throw new ArgumentException("Move falls outside board");
