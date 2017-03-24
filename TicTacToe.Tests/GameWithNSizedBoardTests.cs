@@ -38,17 +38,17 @@
 
             int x = 0, y = 4;
             game.AddMove(x, y);
-            game.Board.PlayerInCell(x, y).ShouldBe(Player.Player1);
+            game.Board.PlayerInCell(x, y).ShouldBe(Player.One);
 
             x = 4;
             y = 0;
             game.AddMove(x, y);
-            game.Board.PlayerInCell(x, y).ShouldBe(Player.Player2);
+            game.Board.PlayerInCell(x, y).ShouldBe(Player.Two);
 
             x = 4;
             y = 4;
             game.AddMove(x, y);
-            game.Board.PlayerInCell(x, y).ShouldBe(Player.Player1);
+            game.Board.PlayerInCell(x, y).ShouldBe(Player.One);
         }
 
         public void should_update_status_and_winner_when_game_is_won_by_player_1()
@@ -81,7 +81,7 @@
 
             game.AddMove(3, 3); // p1 just won
             game.Status.ShouldBe(Game.COMPLETE);
-            game.Winner.ShouldBe(Player.Player1);
+            game.Winner.ShouldBe(Player.One);
         }
 
         public void should_update_status_and_winner_when_game_is_won_by_player_2()
@@ -118,7 +118,7 @@
 
             game.AddMove(3, 3); // p2 just won
             game.Status.ShouldBe(Game.COMPLETE);
-            game.Winner.ShouldBe(Player.Player2);
+            game.Winner.ShouldBe(Player.Two);
         }
 
         public void should_detect_when_game_is_tied()
@@ -167,8 +167,5 @@
             // game is tied at this point; no result is possible even with additional moves
             return game;
         }
-
-
-
     }
 }

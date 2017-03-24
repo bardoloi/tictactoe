@@ -26,13 +26,13 @@
                 DisplayBoard(game.Board);
             }
 
-            var winner = Player.None;
-            if (game.Winner == Player.Player1)
-                winner = Player.Player1;
-            else if (game.Winner == Player.Player2)
-                winner = Player.Player2;
+            var winner = Player.None.DisplayName;
+            if (game.Winner == Player.One)
+                winner = Player.One.DisplayName;
+            else if (game.Winner == Player.Two)
+                winner = Player.Two.DisplayName;
 
-            Console.WriteLine($"{winner.DisplayName} wins!");
+            Console.WriteLine($"{winner} wins!");
 
             Console.ReadLine();
         }
@@ -47,11 +47,11 @@
                     var index = 3*i + j;
 
                     var mark = " ";
-                    if (board.PlayerInCell(i, j) == Player.Player1)
+                    if (board.PlayerInCell(i, j) == Player.One)
                     {
                         mark = "X";
                     }
-                    else if (board.PlayerInCell(i, j) == Player.Player2)
+                    else if (board.PlayerInCell(i, j) == Player.Two)
                     {
                         mark = "O";
                     }

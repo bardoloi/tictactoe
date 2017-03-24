@@ -6,7 +6,7 @@
     {
         public const string COMPLETE = "COMPLETE", INPROGRESS = "IN PROGRESS";
 
-        private Player _nextPlayer = Player.Player1;
+        private Player _nextPlayer = Player.One;
 
         public Board Board { get; }
         public string Status { get; private set; } = INPROGRESS;
@@ -33,7 +33,7 @@
 
             UpdateGameStatus(_nextPlayer);
 
-            _nextPlayer = (_nextPlayer == Player.Player1) ? Player.Player2 : Player.Player1;
+            _nextPlayer = _nextPlayer.Toggle();
         }
 
         private void UpdateGameStatus(Player player)

@@ -48,7 +48,7 @@
 
         private void UpdateInternalCounts(int x, int y, Player player)
         {
-            var score = (player == Player.Player1) ? 1 : -1;
+            var score = (player == Player.One) ? 1 : -1;
 
             var rowIndex = x;
             var colIndex = Side + y;

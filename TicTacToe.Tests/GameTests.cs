@@ -18,17 +18,17 @@
 
             int x = 0, y = 2;
             game.AddMove(x, y);
-            game.Board.PlayerInCell(x, y).ShouldBe(Player.Player1);
+            game.Board.PlayerInCell(x, y).ShouldBe(Player.One);
 
             x = 1;
             y = 0;
             game.AddMove(x, y);
-            game.Board.PlayerInCell(x, y).ShouldBe(Player.Player2);
+            game.Board.PlayerInCell(x, y).ShouldBe(Player.Two);
 
             x = 1;
             y = 1;
             game.AddMove(x, y);
-            game.Board.PlayerInCell(x, y).ShouldBe(Player.Player1);
+            game.Board.PlayerInCell(x, y).ShouldBe(Player.One);
         }
 
         public void should_update_status_and_winner_when_game_is_won_by_player_1()
@@ -38,18 +38,22 @@
             game.AddMove(0, 0); // p1
             game.Status.ShouldBe(Game.INPROGRESS);
             game.Winner.ShouldBe(Player.None);
+
             game.AddMove(1, 0);
             game.Status.ShouldBe(Game.INPROGRESS);
             game.Winner.ShouldBe(Player.None);
+
             game.AddMove(0, 1); // p1
             game.Status.ShouldBe(Game.INPROGRESS);
             game.Winner.ShouldBe(Player.None);
+
             game.AddMove(1, 1);
             game.Status.ShouldBe(Game.INPROGRESS);
             game.Winner.ShouldBe(Player.None);
-            game.AddMove(0, 2); // p1 just won
+
+            game.AddMove(0, 2); // p1 <--- win
             game.Status.ShouldBe(Game.COMPLETE);
-            game.Winner.ShouldBe(Player.Player1);            
+            game.Winner.ShouldBe(Player.One);            
         }
 
         public void should_update_status_and_winner_when_game_is_won_by_player_2()
@@ -73,7 +77,7 @@
             game.Winner.ShouldBe(Player.None);
             game.AddMove(1, 2); // p2 just won
             game.Status.ShouldBe(Game.COMPLETE);
-            game.Winner.ShouldBe(Player.Player2);
+            game.Winner.ShouldBe(Player.Two);
         }
 
         public void should_update_status_and_winner_when_game_is_tied()
