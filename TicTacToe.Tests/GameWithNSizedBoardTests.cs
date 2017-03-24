@@ -14,22 +14,10 @@
             });
         }
 
-        public void should_initiate_board_of_side_3_by_default()
-        {
-            var game = new Game();
-            game.Board.Side.ShouldBe(3);
-        }
-
-        public void should_initiate_board_of_correct_size()
-        {
-            var game = new Game(5);
-            game.Board.Side.ShouldBe(5);
-        }
-
         public void should_start_new_game_with_status_in_progress()
         {
             var game = new Game(6);
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
         }
 
         public void should_put_correct_player_on_board_for_each_move()
@@ -38,17 +26,17 @@
 
             int x = 0, y = 4;
             game.AddMove(x, y);
-            game.Board.PlayerInCell(x, y).ShouldBe(Player.Player1);
+            game.Board.PlayerInCell(x, y).ShouldBe(Player.One);
 
             x = 4;
             y = 0;
             game.AddMove(x, y);
-            game.Board.PlayerInCell(x, y).ShouldBe(Player.Player2);
+            game.Board.PlayerInCell(x, y).ShouldBe(Player.Two);
 
             x = 4;
             y = 4;
             game.AddMove(x, y);
-            game.Board.PlayerInCell(x, y).ShouldBe(Player.Player1);
+            game.Board.PlayerInCell(x, y).ShouldBe(Player.One);
         }
 
         public void should_update_status_and_winner_when_game_is_won_by_player_1()
@@ -56,32 +44,32 @@
             var game = new Game(4);
 
             game.AddMove(0, 0); // p1
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(1, 0);
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(1, 1); // p1
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(2, 0);
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(2, 2); // p1
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(3, 0);
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(3, 3); // p1 just won
-            game.Status.ShouldBe(Game.COMPLETE);
-            game.Winner.ShouldBe(Player.Player1);
+            game.Status.ShouldBe(GameStatus.Completed);
+            game.Winner.ShouldBe(Player.One);
         }
 
         public void should_update_status_and_winner_when_game_is_won_by_player_2()
@@ -89,42 +77,42 @@
             var game = new Game(4);
 
             game.AddMove(0, 0);
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(3, 0); // p2
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(1, 1);
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(3, 1); // p2
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(2, 2);
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(3, 2); // p2
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(2, 3);
-            game.Status.ShouldBe(Game.INPROGRESS);
+            game.Status.ShouldBe(GameStatus.InProgress);
             game.Winner.ShouldBe(Player.None);
 
             game.AddMove(3, 3); // p2 just won
-            game.Status.ShouldBe(Game.COMPLETE);
-            game.Winner.ShouldBe(Player.Player2);
+            game.Status.ShouldBe(GameStatus.Completed);
+            game.Winner.ShouldBe(Player.Two);
         }
 
         public void should_detect_when_game_is_tied()
         {
             var game = PlayTiedGame();
-            game.Status.ShouldBe(Game.COMPLETE);
+            game.Status.ShouldBe(GameStatus.Completed);
             game.Winner.ShouldBe(Player.None);
         }
 
@@ -167,8 +155,5 @@
             // game is tied at this point; no result is possible even with additional moves
             return game;
         }
-
-
-
     }
 }

@@ -1,117 +1,128 @@
 ﻿namespace TicTacToe.Core
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     public class Board
     {
-        public const int DEFAULTSIZE = 9, DEFAULTSIDE = 3;
+        private const int DefaultSide = 3;
+        private readonly List<Move> _moves = new List<Move>();
 
-        private int _filledCells;
-        private readonly Player[][] _cells;
-        private readonly int[] _rowColDiagScores, _rowColDiagMoveCounts;
         public int Side { get; }
 
-        public Board() : this(DEFAULTSIDE)
+        public Board() : this(DefaultSide)
         {            
         }
 
         public Board(int side)
         {
-            Side = side;
-            _rowColDiagScores = new int[(2 * Side) + 2];
-            _rowColDiagMoveCounts = new int[(2 * Side) + 2];
+            if (side < DefaultSide)
+                throw new ArgumentException($"Board size must be {DefaultSide} or higher");
 
-            // initialize board
-            _cells = new Player[Side][];
-            for (var i = 0; i < Side; i++)
-            {
-                _cells[i] = new Player[Side];
-                for (var j = 0; j < Side; j++)
-                    _cells[i][j] = Player.None;
-            }
+            Side = side;
         }
 
-        internal void AddMoveToCell(int x, int y, Player player)
+        public Player PlayerInCell(int x, int y)
+        {
+            var move = _moves.FirstOrDefault(m => m.X == x && m.Y == y);
+            return move == null ? Player.None : move.Player;
+        }
+
+        public bool IsCellEmpty(int x, int y)
+        {
+            return !_moves.Any(m => m.X == x && m.Y == y);
+        }
+
+        public void AddMoveToCell(int x, int y, Player player)
         {
             if (x < 0 || x >= Side || y < 0 || y >= Side)
                 throw new ArgumentException("Move falls outside board");
             if (!IsCellEmpty(x, y))
                 throw new ArgumentException("Cell is already occupied");
 
-            _cells[x][y] = player;
-
-            _filledCells++;
-
-            UpdateInternalCounts(x, y, player);
+            _moves.Add(new Move {Player = player, X = x, Y = y});
         }
 
-        private void UpdateInternalCounts(int x, int y, Player player)
+        internal bool IsWon()
         {
-            var score = (player == Player.Player1) ? 1 : -1;
-
-            var rowIndex = x;
-            var colIndex = Side + y;
-
-            var diag1Index = 2* Side;
-            var diag2Index = 2 * Side + 1;
-
-            // update row scores
-            _rowColDiagScores[rowIndex] += score; 
-            _rowColDiagMoveCounts[rowIndex]++;
-
-            // update column score
-            _rowColDiagScores[colIndex] += score; 
-            _rowColDiagMoveCounts[colIndex]++;
-
-            // update diagonal score
-            if (x == y)
-            {
-                _rowColDiagScores[diag1Index] += score; 
-                _rowColDiagMoveCounts[diag1Index]++;
-            }
-            
-            // update antidiagonal score
-            if (x + y == DEFAULTSIDE)
-            { 
-                _rowColDiagScores[diag2Index] += score;
-                _rowColDiagMoveCounts[diag1Index]++;
-            }
+            return
+                GetAllRows().Any(IsFilledBySinglePlayer)
+                ||
+                GetAllColumns().Any(IsFilledBySinglePlayer)
+                ||
+                GetAllDiagonals().Any(IsFilledBySinglePlayer);
         }
 
-        public Player PlayerInCell(int x, int y)
+        internal bool IsDrawn()
         {
-            return _cells[x][y];
+            // Drawn if each row, col and diag has at least 1 move by each players - so nobody can win
+            return
+                GetAllRows().All(ContainsMarksFromEachPlayer)
+                &&
+                GetAllColumns().All(ContainsMarksFromEachPlayer)
+                &&
+                GetAllDiagonals().All(ContainsMarksFromEachPlayer);
         }
 
-        public bool IsCellEmpty(int x, int y)
+        private static bool ContainsMarksFromEachPlayer(IEnumerable<Move> input)
         {
-            return _cells[x][y] == Player.None;
+            IEnumerable<Move> x = input.ToList();
+            return x.Any(m => m.Player == Player.One) && x.Any(m => m.Player == Player.Two);
         }
 
-        public bool IsWon()
+        private bool IsFilledBySinglePlayer(IEnumerable<Move> input)
         {
-            return _rowColDiagScores.Any(s => Math.Abs(s).Equals(Side));
+            IEnumerable<Move> x = input.ToList();
+            return
+                // row/col/diag is full
+                x.Count() == Side &&
+                // all cells are marked by the same player
+                (x.All(cell => cell.Player == Player.One) || x.All(cell => cell.Player == Player.Two)); 
         }
 
-        public bool IsComplete()
+        private IEnumerable<IEnumerable<Move>> GetAllRows()
         {
-            return IsFull() || NoResultPossible();
+            var rows = new List<IEnumerable<Move>>();
+            for(var i = 0; i < Side; i++)
+                rows.Add(GetRow(i));
+
+            return rows.AsEnumerable();
         }
 
-        private bool NoResultPossible()
+        private IEnumerable<IEnumerable<Move>> GetAllColumns()
         {
-            for(int i = 0; i < _rowColDiagScores.Length; i++)
-                if (_rowColDiagMoveCounts[i] == Math.Abs(_rowColDiagScores[i]))
-                    return false;
+            var cols = new List<IEnumerable<Move>>();
+            for (var i = 0; i < Side; i++)
+                cols.Add(GetColumn(i));
 
-
-            return true;
+            return cols.AsEnumerable();
         }
 
-        private bool IsFull()
+        private IEnumerable<IEnumerable<Move>> GetAllDiagonals()
         {
-            return (_filledCells == Side * Side);
+            var diags = new List<IEnumerable<Move>> {GetDiagonal(), GetAntiDiagonal()};
+            return diags.AsEnumerable();
+        }
+
+        private IEnumerable<Move> GetRow(int rowIndex)
+        {
+            return _moves.Where(m => m.X == rowIndex);
+        }
+
+        private IEnumerable<Move> GetColumn(int colIndex)
+        {
+            return _moves.Where(m => m.Y == colIndex);
+        }
+
+        private IEnumerable<Move> GetDiagonal()
+        {
+            return _moves.Where(m => m.Y == m.X);
+        }
+
+        private IEnumerable<Move> GetAntiDiagonal()
+        {
+            return _moves.Where(m => m.Y + m.X + 1 == Side);
         }
     }
 }

@@ -1,24 +1,54 @@
 ﻿namespace TicTacToe.Core
 {
+    using System;
     using Headspring;
 
-    public class Player : Enumeration<Player>
+    public abstract class Player : Enumeration<Player>
     {
-        private Player(int value, string displayName) : base(value, displayName)
+        public static Player One = new Player1();
+        public static Player Two = new Player2();
+        public static Player None = new NoPlayer();
+
+        protected Player(int value, string displayName) : base(value, displayName)
         {
         }
 
-        public Player Toggle()
+        public abstract Player Toggle();
+
+        private class Player1 : Player
         {
-            if (this == Player2)
-                return Player1;
-            if (this == Player1)
-                return Player2;
-            return None;
+            public Player1() : base(1, "Player 1")
+            {                
+            }
+
+            public override Player Toggle()
+            {
+                return Player.Two;
+            }
         }
 
-        public static Player Player1 = new Player(1, "Player 1");
-        public static Player Player2 = new Player(-1, "Player 2");
-        public static Player None = new Player(0, "Nobody");
+        private class Player2 : Player
+        {
+            public Player2() : base(-1, "Player 2")
+            {
+            }
+
+            public override Player Toggle()
+            {
+                return Player.One;
+            }
+        }
+
+        private class NoPlayer : Player
+        {
+            public NoPlayer() : base(0, "Nobody")
+            {
+            }
+
+            public override Player Toggle()
+            {
+                throw new ApplicationException("Something has gone wrong with your game");
+            }
+        }
     }
 }
