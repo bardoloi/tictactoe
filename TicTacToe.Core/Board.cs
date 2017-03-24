@@ -72,10 +72,10 @@
             }
             
             // update antidiagonal score
-            if (x + y == DEFAULTSIDE)
+            if (x + y + 1 == Side)
             { 
                 _rowColDiagScores[diag2Index] += score;
-                _rowColDiagMoveCounts[diag1Index]++;
+                _rowColDiagMoveCounts[diag2Index]++;
             }
         }
 

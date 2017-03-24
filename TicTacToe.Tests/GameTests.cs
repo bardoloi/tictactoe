@@ -80,6 +80,21 @@
             game.Winner.ShouldBe(Player.Two);
         }
 
+        public void should_detect_antidiagonal_win()
+        {
+            var game = new Game();
+            game.AddMove(1, 1); // p1
+            game.AddMove(0, 0);
+            game.AddMove(2, 2); // p1
+            game.AddMove(0, 1);
+            game.AddMove(0, 2); // p1
+            game.AddMove(1, 2);
+            game.AddMove(2, 0); // p1 <-- win
+
+            game.Status.ShouldBe(Game.COMPLETE);
+            game.Winner.ShouldBe(Player.One);
+        }
+
         public void should_update_status_and_winner_when_game_is_tied()
         {
             var game = PlayTiedGame();
@@ -92,7 +107,7 @@
             var game = PlayTiedGame();
             Should.Throw<ApplicationException>(() =>
             {
-                game.AddMove(2, 1);
+                game.AddMove(2, 0);
             });
         }
 
