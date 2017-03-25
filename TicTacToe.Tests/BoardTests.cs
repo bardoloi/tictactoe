@@ -205,5 +205,20 @@
             board.Winner.ShouldBe(Player.One);
         }
 
+        public void should_detect_draw_scenario_by_looking_ahead()
+        {
+            var board = new Board();
+
+            board.AddMove(0, 0); // p1
+            board.AddMove(1, 1);
+            board.AddMove(0, 1); // p1            
+            board.AddMove(0, 2);
+            board.AddMove(2, 0); // p1
+            board.AddMove(1, 0);
+            board.AddMove(1, 2); // p1 <--- tie game should be detected here
+
+            board.Status().ShouldBe(BoardStatus.Drawn);
+            board.Winner.ShouldBe(Player.None);
+        }
     }
 }
