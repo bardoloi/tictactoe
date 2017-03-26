@@ -10,7 +10,7 @@
         {
             var board = new Board();
 
-            while (board.Status().Equals(BoardStatus.InProgress))
+            while (board.Status.Equals(BoardStatus.InProgress))
             {
                 try
                 {

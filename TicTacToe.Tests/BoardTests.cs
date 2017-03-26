@@ -56,23 +56,23 @@
             var board = new Board();
 
             board.AddMove(0, 0); // p1
-            board.Status().ShouldBe(BoardStatus.InProgress);
+            board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Player.None);
 
             board.AddMove(1, 0);
-            board.Status().ShouldBe(BoardStatus.InProgress);
+            board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Player.None);
 
             board.AddMove(0, 1); // p1
-            board.Status().ShouldBe(BoardStatus.InProgress);
+            board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Player.None);
 
             board.AddMove(1, 1);
-            board.Status().ShouldBe(BoardStatus.InProgress);
+            board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Player.None);
 
             board.AddMove(0, 2); // p1 <--- just won
-            board.Status().ShouldBe(BoardStatus.Won);
+            board.Status.ShouldBe(BoardStatus.Won);
             board.Winner.ShouldBe(Player.One);
         }
 
@@ -81,27 +81,27 @@
                 var board = new Board();
 
                 board.AddMove(0, 0);
-                board.Status().ShouldBe(BoardStatus.InProgress);
+                board.Status.ShouldBe(BoardStatus.InProgress);
                 board.Winner.ShouldBe(Player.None);
 
                 board.AddMove(1, 0); // p2
-                board.Status().ShouldBe(BoardStatus.InProgress);
+                board.Status.ShouldBe(BoardStatus.InProgress);
                 board.Winner.ShouldBe(Player.None);
 
                 board.AddMove(0, 1);
-                board.Status().ShouldBe(BoardStatus.InProgress);
+                board.Status.ShouldBe(BoardStatus.InProgress);
                 board.Winner.ShouldBe(Player.None);
 
                 board.AddMove(1, 1); // p2
-                board.Status().ShouldBe(BoardStatus.InProgress);
+                board.Status.ShouldBe(BoardStatus.InProgress);
                 board.Winner.ShouldBe(Player.None);
 
                 board.AddMove(2, 2);
-                board.Status().ShouldBe(BoardStatus.InProgress);
+                board.Status.ShouldBe(BoardStatus.InProgress);
                 board.Winner.ShouldBe(Player.None);
 
                 board.AddMove(1, 2); // p2 <----- just won
-                board.Status().ShouldBe(BoardStatus.Won);
+                board.Status.ShouldBe(BoardStatus.Won);
             board.Winner.ShouldBe(Player.Two);
         }
 
@@ -118,7 +118,7 @@
             board.AddMove(1, 2); // p1
             board.AddMove(2, 2); // tie game
 
-            board.Status().ShouldBe(BoardStatus.Drawn);
+            board.Status.ShouldBe(BoardStatus.Drawn);
             board.Winner.ShouldBe(Player.None);
         }
 
@@ -201,7 +201,7 @@
             board.AddMove(1, 2);
             board.AddMove(2, 0); // p1 <-- win
 
-            board.Status().ShouldBe(BoardStatus.Won);
+            board.Status.ShouldBe(BoardStatus.Won);
             board.Winner.ShouldBe(Player.One);
         }
 
@@ -217,7 +217,7 @@
             board.AddMove(1, 0);
             board.AddMove(1, 2); // p1 <--- tie game should be detected here
 
-            board.Status().ShouldBe(BoardStatus.Drawn);
+            board.Status.ShouldBe(BoardStatus.Drawn);
             board.Winner.ShouldBe(Player.None);
         }
     }

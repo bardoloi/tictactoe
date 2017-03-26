@@ -25,15 +25,18 @@
             Side = side;
         }
 
-        public BoardStatus Status()
+        public BoardStatus Status
         {
-            if (IsWon())
-                return BoardStatus.Won;
+            get
+            {
+                if (IsWon())
+                    return BoardStatus.Won;
 
-            if (IsDrawn())
-                return BoardStatus.Drawn;
+                if (IsDrawn())
+                    return BoardStatus.Drawn;
 
-            return BoardStatus.InProgress;
+                return BoardStatus.InProgress;
+            }
         }
 
         public Player PlayerInCell(int x, int y)
@@ -53,7 +56,7 @@
                 throw new ArgumentException("Move falls outside board");
             if (!IsCellEmpty(x, y))
                 throw new ArgumentException("Cell is already occupied");
-            if (!Status().Equals(BoardStatus.InProgress))
+            if (!Status.Equals(BoardStatus.InProgress))
                 throw new ApplicationException("Game is already over!");
 
             var player = _nextPlayer;
@@ -67,7 +70,7 @@
             _nextPlayer = player.Toggle(); 
         }
 
-        internal bool IsWon()
+        private bool IsWon()
         {
             return
                 GetAllRows().Any(IsFilledBySinglePlayer)
@@ -77,7 +80,7 @@
                 GetAllDiagonals().Any(IsFilledBySinglePlayer);
         }
 
-        internal bool IsDrawn()
+        private bool IsDrawn()
         {
             // Drawn if each row, col and diag has at least 1 move by each players - so nobody can win
             return
