@@ -10,6 +10,7 @@
         {
             var board = new Board();
 
+            var mark = Mark.X; // always start with X
             while (board.Status.Equals(BoardStatus.InProgress))
             {
                 try
@@ -17,7 +18,8 @@
                     Console.Write("Enter next move (x y): ");
                     var xy = Array.ConvertAll(Console.ReadLine().Split(' ').ToArray(), s => int.Parse(s.Trim()));
 
-                    board.AddMove(xy[0], xy[1]);
+                    board.AddMark(xy[0], xy[1], mark);
+                    mark = mark.Toggle();
                 }
                 catch (Exception ex)
                 {
@@ -41,11 +43,11 @@
                     var index = 3*i + j;
 
                     var mark = " ";
-                    if (board.PlayerInCell(i, j) == Player.One)
+                    if (board.MarkInCell(i, j) == Mark.X)
                     {
                         mark = "X";
                     }
-                    else if (board.PlayerInCell(i, j) == Player.Two)
+                    else if (board.MarkInCell(i, j) == Mark.O)
                     {
                         mark = "O";
                     }

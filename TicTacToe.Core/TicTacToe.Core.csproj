@@ -43,8 +43,8 @@
     <Compile Include="Board.cs" />
     <Compile Include="BoardStatus.cs" />
     <Compile Include="Headspring\Enumeration.cs" />
-    <Compile Include="Move.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="Cell.cs" />
+    <Compile Include="Mark.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
