@@ -41,7 +41,7 @@
 
         private class NoMark : Mark
         {
-            public NoMark() : base(0, "Empty")
+            public NoMark() : base(0, " ")
             {
             }
 

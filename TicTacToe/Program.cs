@@ -8,27 +8,28 @@
     {
         static void Main(string[] args)
         {
-            var board = new Board();
-
             var mark = Mark.X; // always start with X
-            while (board.Status.Equals(BoardStatus.InProgress))
+
+            var game = new Game(mark);
+
+            while (game.Status.Equals(GameStatus.InProgress))
             {
                 try
                 {
                     Console.Write("Enter next move (x y): ");
                     var xy = Array.ConvertAll(Console.ReadLine().Split(' ').ToArray(), s => int.Parse(s.Trim()));
 
-                    board.AddMark(xy[0], xy[1], mark);
+                    game.AddMove(xy[0], xy[1]);
                     mark = mark.Toggle();
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
-                DisplayBoard(board);
+                DisplayBoard(game.Board);
             }
 
-            Console.WriteLine($"{board.Winner.DisplayName} wins!");
+            Console.WriteLine($"{game.Winner.Name} ({game.Winner.Mark.DisplayName}) wins!");
 
             Console.ReadLine();
         }
@@ -41,17 +42,7 @@
                 for (var j = 0; j < 3; j++)
                 {
                     var index = 3*i + j;
-
-                    var mark = " ";
-                    if (board.MarkInCell(i, j) == Mark.X)
-                    {
-                        mark = "X";
-                    }
-                    else if (board.MarkInCell(i, j) == Mark.O)
-                    {
-                        mark = "O";
-                    }
-
+                    var mark = board.MarkInCell(i, j).DisplayName;
                     output = output.Replace($"p{index}", mark);
                 }
             }

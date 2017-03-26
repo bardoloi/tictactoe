@@ -50,7 +50,7 @@
             return !_cells.Any(m => m.X == x && m.Y == y);
         }
 
-        public void AddMark(int x, int y, Mark mark)
+        public void AddMove(int x, int y, Mark mark)
         {
             if (!Status.Equals(BoardStatus.InProgress))
                 throw new ApplicationException("Game is already over!");
@@ -59,7 +59,7 @@
             if (!IsCellEmpty(x, y))
                 throw new ArgumentException("Cell is already occupied");
             if(mark == _lastMark)
-                throw new ArgumentException("Same player cannot move twice!");
+                throw new ArgumentException("X and O must alternate, they cannot repeat!");
             if (mark == Mark.None)
                 throw new ArgumentException("Must play either X or O");
 

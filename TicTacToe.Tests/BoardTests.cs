@@ -32,22 +32,22 @@
             var board = new Board();
 
             int x = 0, y = 2;
-            board.AddMark(x, y, Mark.X);
+            board.AddMove(x, y, Mark.X);
             board.MarkInCell(x, y).ShouldBe(Mark.X);
 
             x = 1;
             y = 0;
-            board.AddMark(x, y, Mark.O);
+            board.AddMove(x, y, Mark.O);
             board.MarkInCell(x, y).ShouldBe(Mark.O);
 
             x = 1;
             y = 1;
-            board.AddMark(x, y, Mark.X);
+            board.AddMove(x, y, Mark.X);
             board.MarkInCell(x, y).ShouldBe(Mark.X);
 
             x = 2;
             y = 2;
-            board.AddMark(x, y, Mark.O);
+            board.AddMove(x, y, Mark.O);
             board.MarkInCell(x, y).ShouldBe(Mark.O);
         }
 
@@ -55,91 +55,121 @@
         {
             var board = new Board();
 
-            board.AddMark(0, 2, Mark.X);
+            board.AddMove(0, 2, Mark.X);
 
-            board.AddMark(1, 1, Mark.O);
-
-            // move cannot use the same mark as previous move
-            Should.Throw<ArgumentException>(() => {
-               board.AddMark(2, 2, Mark.O);
-            });
-
-            board.AddMark(2, 2, Mark.X);
+            board.AddMove(1, 1, Mark.O);
 
             // move cannot use the same mark as previous move
             Should.Throw<ArgumentException>(() => {
-                board.AddMark(2, 0, Mark.X);
+               board.AddMove(2, 2, Mark.O);
             });
 
-            board.AddMark(2, 0, Mark.O);
+            board.AddMove(2, 2, Mark.X);
+
+            // move cannot use the same mark as previous move
+            Should.Throw<ArgumentException>(() => {
+                board.AddMove(2, 0, Mark.X);
+            });
+
+            board.AddMove(2, 0, Mark.O);
         }
 
-        public void should_update_status_and_winner_when_player_1_wins()
+        public void should_update_status_and_winner_when_board_is_won_v1()
         {
             var board = new Board();
 
-            board.AddMark(0, 0, Mark.X); // p1
+            board.AddMove(0, 0, Mark.X); // p1
             board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Mark.None);
 
-            board.AddMark(1, 0, Mark.O);
+            board.AddMove(1, 0, Mark.O);
             board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Mark.None);
 
-            board.AddMark(0, 1, Mark.X); // p1
+            board.AddMove(0, 1, Mark.X); // p1
             board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Mark.None);
 
-            board.AddMark(1, 1, Mark.O);
+            board.AddMove(1, 1, Mark.O);
             board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Mark.None);
 
-            board.AddMark(0, 2, Mark.X); // p1 <--- just won
+            board.AddMove(0, 2, Mark.X); // p1 <--- just won
             board.Status.ShouldBe(BoardStatus.Won);
             board.Winner.ShouldBe(Mark.X);
         }
 
-        public void should_update_status_and_winner_when_player_2_wins()
+        public void should_update_status_and_winner_when_board_is_won_v2()
         {
             var board = new Board();
 
-            board.AddMark(0, 0, Mark.O);
+            board.AddMove(0, 0, Mark.O);
             board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Mark.None);
 
-            board.AddMark(1, 0, Mark.X); // p2
+            board.AddMove(1, 0, Mark.X); // p2
             board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Mark.None);
 
-            board.AddMark(0, 1, Mark.O);
+            board.AddMove(0, 1, Mark.O);
             board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Mark.None);
 
-            board.AddMark(1, 1, Mark.X); // p2
+            board.AddMove(1, 1, Mark.X); // p2
             board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Mark.None);
 
-            board.AddMark(2, 2, Mark.O);
+            board.AddMove(2, 2, Mark.O);
             board.Status.ShouldBe(BoardStatus.InProgress);
             board.Winner.ShouldBe(Mark.None);
 
-            board.AddMark(1, 2, Mark.X); // p2 <----- just won
+            board.AddMove(1, 2, Mark.X); // p2 <----- just won
             board.Status.ShouldBe(BoardStatus.Won);
             board.Winner.ShouldBe(Mark.X);
+        }
+
+        public void should_update_status_and_winner_when_board_is_won_antidiagonally()
+        {
+            var board = new Board();
+
+            board.AddMove(1, 1, Mark.O); // p1
+            board.Status.ShouldBe(BoardStatus.InProgress);
+            board.Winner.ShouldBe(Mark.None);
+
+            board.AddMove(0, 0, Mark.X);
+            board.Status.ShouldBe(BoardStatus.InProgress);
+            board.Winner.ShouldBe(Mark.None);
+
+            board.AddMove(2, 2, Mark.O); // p1
+            board.Status.ShouldBe(BoardStatus.InProgress);
+            board.Winner.ShouldBe(Mark.None);
+
+            board.AddMove(0, 1, Mark.X);
+            board.Status.ShouldBe(BoardStatus.InProgress);
+            board.Winner.ShouldBe(Mark.None);
+
+            board.AddMove(0, 2, Mark.O); // p1
+            board.Status.ShouldBe(BoardStatus.InProgress);
+            board.Winner.ShouldBe(Mark.None);
+            board.AddMove(1, 2, Mark.X);
+
+            board.AddMove(2, 0, Mark.O); // p1 <-- win
+            board.Status.ShouldBe(BoardStatus.Won);
+            board.Winner.ShouldBe(Mark.O);
         }
 
         public void should_update_status_and_winner_when_board_is_drawn()
         {
             var board = new Board();
 
-            board.AddMark(0, 0, Mark.X); // p1
-            board.AddMark(0, 1, Mark.O);
-            board.AddMark(0, 2, Mark.X); // p1            
-            board.AddMark(1, 1, Mark.O);
-            board.AddMark(2, 1, Mark.X); // p1
-            board.AddMark(1, 0, Mark.O);
-            board.AddMark(1, 2, Mark.X); // p1
-            board.AddMark(2, 2, Mark.O); // tie game
+            board.AddMove(0, 0, Mark.X); // p1
+            board.AddMove(0, 1, Mark.O);
+            board.AddMove(0, 2, Mark.X); // p1            
+            board.AddMove(1, 1, Mark.O);
+            board.AddMove(2, 1, Mark.X); // p1
+            board.AddMove(1, 0, Mark.O);
+            board.AddMove(1, 2, Mark.X); // p1
+            board.AddMove(2, 2, Mark.O); // tie game
 
             board.Status.ShouldBe(BoardStatus.Drawn);
             board.Winner.ShouldBe(Mark.None);
@@ -149,18 +179,18 @@
         {
             var board = new Board();
 
-            board.AddMark(0, 0, Mark.O); // p1
-            board.AddMark(0, 1, Mark.X);
-            board.AddMark(0, 2, Mark.O); // p1            
-            board.AddMark(1, 1, Mark.X);
-            board.AddMark(2, 1, Mark.O); // p1
-            board.AddMark(1, 0, Mark.X);
-            board.AddMark(1, 2, Mark.O); // p1
-            board.AddMark(2, 2, Mark.X); // tie game
+            board.AddMove(0, 0, Mark.O); // p1
+            board.AddMove(0, 1, Mark.X);
+            board.AddMove(0, 2, Mark.O); // p1            
+            board.AddMove(1, 1, Mark.X);
+            board.AddMove(2, 1, Mark.O); // p1
+            board.AddMove(1, 0, Mark.X);
+            board.AddMove(1, 2, Mark.O); // p1
+            board.AddMove(2, 2, Mark.X); // tie game
 
             Should.Throw<ApplicationException>(() =>
             {
-                board.AddMark(2, 0, Mark.O);
+                board.AddMove(2, 0, Mark.O);
             });
         }
 
@@ -173,17 +203,17 @@
             // add move to unoccupied cell: succeeds
             Should.NotThrow(() =>
             {
-                board.AddMark(x, y, Mark.X);
+                board.AddMove(x, y, Mark.X);
             });
 
             // add move to occupied cell: fails regardless of what mark is made
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMark(x, y, Mark.X);
+                board.AddMove(x, y, Mark.X);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMark(x, y, Mark.O);
+                board.AddMove(x, y, Mark.O);
             });
         }
 
@@ -193,40 +223,40 @@
 
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMark(-1, -1, Mark.X);
+                board.AddMove(-1, -1, Mark.X);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMark(-1, 0, Mark.X);
+                board.AddMove(-1, 0, Mark.X);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMark(0, -2, Mark.X);
+                board.AddMove(0, -2, Mark.X);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMark(0, 3, Mark.X);
+                board.AddMove(0, 3, Mark.X);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMark(3, 2, Mark.X);
+                board.AddMove(3, 2, Mark.X);
             });
             Should.Throw<ArgumentException>(() =>
             {
-                board.AddMark(3, 5, Mark.X);
+                board.AddMove(3, 5, Mark.X);
             });
         }
 
         public void should_detect_antidiagonal_win()
         {
             var board = new Board();
-            board.AddMark(1, 1, Mark.O); // p1
-            board.AddMark(0, 0, Mark.X);
-            board.AddMark(2, 2, Mark.O); // p1
-            board.AddMark(0, 1, Mark.X);
-            board.AddMark(0, 2, Mark.O); // p1
-            board.AddMark(1, 2, Mark.X);
-            board.AddMark(2, 0, Mark.O); // p1 <-- win
+            board.AddMove(1, 1, Mark.O); // p1
+            board.AddMove(0, 0, Mark.X);
+            board.AddMove(2, 2, Mark.O); // p1
+            board.AddMove(0, 1, Mark.X);
+            board.AddMove(0, 2, Mark.O); // p1
+            board.AddMove(1, 2, Mark.X);
+            board.AddMove(2, 0, Mark.O); // p1 <-- win
 
             board.Status.ShouldBe(BoardStatus.Won);
             board.Winner.ShouldBe(Mark.O);
@@ -236,13 +266,13 @@
         {
             var board = new Board();
 
-            board.AddMark(0, 0, Mark.X); // p1
-            board.AddMark(1, 1, Mark.O);
-            board.AddMark(0, 1, Mark.X); // p1            
-            board.AddMark(0, 2, Mark.O);
-            board.AddMark(2, 0, Mark.X); // p1
-            board.AddMark(1, 0, Mark.O);
-            board.AddMark(1, 2, Mark.X); // p1 <--- tie game should be detected here
+            board.AddMove(0, 0, Mark.X); // p1
+            board.AddMove(1, 1, Mark.O);
+            board.AddMove(0, 1, Mark.X); // p1            
+            board.AddMove(0, 2, Mark.O);
+            board.AddMove(2, 0, Mark.X); // p1
+            board.AddMove(1, 0, Mark.O);
+            board.AddMove(1, 2, Mark.X); // p1 <--- tie game should be detected here
 
             board.Status.ShouldBe(BoardStatus.Drawn);
             board.Winner.ShouldBe(Mark.None);
